@@ -12,15 +12,15 @@ Inspired by Kyle Kingsbury's [Jepsen][jepsen] series, this is my attempt to put 
 
 To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, I just installed five copies of CouchDB and configured them to use different ports. Here's how to do that:
 
-    ...
+    TODO
 
 Once you've got your cluster:
 
-  git clone git@github.com:garbados/jepsen-couchdb.git 
-  cd jepsen-couchdb
-  virtualenv venv
-  source venv/bin/activate
-  pip install -r requirements.txt
+    git clone git@github.com:garbados/jepsen-couchdb.git 
+    cd jepsen-couchdb
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
 Now you should be good to go.
 

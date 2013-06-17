@@ -26,8 +26,6 @@ Each node in our cluster replicates with every other node, so the network map lo
 
 [![Pentalicious][pentagram]]
 
-(Credit for original image goes to [Alchem][alchem])
-
 That way, if a node ever loses connection, then replications will bring it up-to-date once it comes back -- assuming it's offline for less time than it takes for the replication to stop retrying the connection, which by default is a few days.
 
 ## Rock a Rhyme: Simple Writes
@@ -47,5 +45,4 @@ Everything's consistent. All it took was time. But that means anywhere in those 
 [jepsen]: http://aphyr.com/posts/281-call-me-maybe-carly-rae-jepsen-and-the-perils-of-network-partitions
 [tricky]: http://www.youtube.com/watch?v=l-O5IHVhWj0
 [tricky_cover]: http://www.bitcandy.com/img/plogs/1334080668.jpg
-[pentagram]: http://herpderp
-[alchem]: http://alchem.deviantart.com/art/Pentagram-136683440
+[pentagram]: http://farm3.staticflickr.com/2854/9067722628_09560c77ae_o.jpg

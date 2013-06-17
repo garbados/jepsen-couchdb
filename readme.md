@@ -26,7 +26,7 @@ Now you should be good to go.
 
 ## Clusters in CouchDB
 
-CouchDB isn't built to operate in clusters by default, so for this experiment, our five nodes just replicate between each other, aspiring to be identical. To set up that replication, do `make build`.
+CouchDB isn't built to operate in clusters by default, so for this experiment, our five nodes just replicate between each other, aspiring to be identical.
 
 Continuous replication in CouchDB sets up a listener on the source database's changes feed, and pushes changes to the source database as they occur. If the replication fails at any point, it retries a configurable number of times in lengthening intervals, until eventually it gives up.
 

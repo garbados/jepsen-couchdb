@@ -11,7 +11,7 @@ sync_doc = """{
    "continuous": true
 }"""
 
-def sync():
+def sync(nodes=nodes):
   for i, node in enumerate(nodes):
     # create test db in source
     r = requests.put('/'.join([make_url(node), 'test']))
@@ -33,7 +33,13 @@ def sync():
                         headers=headers)
       if 'error' in r.json():
         raise Exception(r.json())
-  print "Synced." 
+  print "Synced."
+
+def part_network():
+  group1 = nodes[:2]
+  group2 = nodes[2:]
+  sync(group1)
+  sync(group2)
 
 if __name__ == '__main__':
   sync()

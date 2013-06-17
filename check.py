@@ -1,4 +1,5 @@
 import requests
+import sync
 import time
 import sys
 from collections import Counter
@@ -19,21 +20,29 @@ def format_remote(port, r, n):
 def get_all(nodes):
   results = {}
   for node in nodes:
-    r = requests.get('/'.join([make_url(node), 'test', '_all_docs']),
-                     params={
-                      'include_docs': True
-                     })
-    results[node] = r
+    try:
+      r = requests.get('/'.join([make_url(node), 'test', '_all_docs']),
+                       params={
+                        'include_docs': True
+                       })
+    except requests.exceptions.ConnectionError:
+      print "%s down :(" % node
+    else:
+      results[node] = r
   return results
 
 def get_by_quorum(nodes):
   results = []
   for node in nodes:
-    r = requests.get('/'.join([make_url(node), 'test', '_all_docs']),
-                     params={
-                      'include_docs': True
-                     })
-    results.extend(r.json()['rows'])
+    try:
+      r = requests.get('/'.join([make_url(node), 'test', '_all_docs']),
+                       params={
+                        'include_docs': True
+                       })
+    except requests.exceptions.ConnectionError:
+      pass
+    else:
+      results.extend(r.json()['rows'])
   ids = {}
   for row in results:
     ids[row['id']] = row['doc']['value']
@@ -50,16 +59,49 @@ def get_one_by_quorum(nodes, id):
   docs = {}
   votes = Counter()
   for node in nodes:
-    r = requests.get('/'.join([make_url(node), 'test', id]))
-    doc = r.json()
-    if '_rev' in doc:
-      docs[doc['_rev']] = doc
-      votes[doc['_rev']] += 1
-      if votes.most_common(1)[0][1] >= n:
-        break
+    try:
+      r = requests.get('/'.join([make_url(node), 'test', id]))
+    except requests.exceptions.ConnectionError:
+      pass
+    else:
+      doc = r.json()
+      if '_rev' in doc:
+        docs[doc['_rev']] = doc
+        votes[doc['_rev']] += 1
+        if votes.most_common(1)[0][1] >= n:
+          break
   else:
+    print votes
     return None
   return docs[votes.most_common(1)[0][0]]
+
+def shitshow_get(nodes):
+  results = []
+  for node in nodes:
+    try:
+      r = requests.get('/'.join([make_url(node), 'test', '_all_docs']),
+                       params={
+                        'include_docs': True
+                       })
+    except requests.exceptions.ConnectionError:
+      pass
+    else:
+      results.extend(r.json()['rows'])
+  ids = {}
+  for row in [row['doc'] for row in results]:
+    if row['_id'] in ids and row['_rev'] != ids[row['_id']]['rev']:
+      print "Document conflict with %s" % row['_id']
+    ids[row['_id']] = {
+      'rev': row['_rev'],
+      'value': row['value']
+    }
+  for id in ids.keys()[:1]:
+    doc = get_one_by_quorum(nodes, id)
+    if doc:
+      print "Got %s by quorum!" % id
+    else:
+      print "Failed to get %s by quorum" % id
+  return ids
 
 ### CHECKS ###
 
@@ -85,3 +127,30 @@ def quorum(work, n=100):
   print len(results.keys()), "docs in result set."
   if sum(results.values()) == sum(range(n)):
     print "...and checksum passed!"
+
+def shitshow(work, n=100):
+  results = work(n)
+  format_acks(results, n)
+  results = shitshow_get(nodes)
+  print len(results.keys()), "docs in result set."
+  values = [row['value'] for row in results.values()]
+  # print values
+  if sum(values) == sum(range(n)):
+    print "...and checksum passed!"
+  return results
+
+def heal(work, n=100):
+  shitshow(work, n)
+  sync.sync()
+  time.sleep(5)
+  results = get_all(nodes)
+  for node, r in results.items():
+    format_remote(node, r, n)
+  else:
+    id = r.json()['rows'][0]['id']
+    doc = get_one_by_quorum(nodes, id)
+    if doc:
+      print "Got %s by quorum!" % id
+    else:
+      print "Failed to get %s by quorum" % id
+    

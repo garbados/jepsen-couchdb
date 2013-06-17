@@ -24,7 +24,7 @@ Continuous replication in CouchDB polls a target database for changes every few 
 
 Each node in our cluster replicates with every other node, so the network map looks like this:
 
-[![Pentalicious][pentagram]]
+![Pentalicious][pentagram]
 
 That way, if a node ever loses connection, then replications will bring it up-to-date once it comes back -- assuming it's offline for less time than it takes for the replication to stop retrying the connection, which by default is a few days.
 

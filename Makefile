@@ -1,6 +1,3 @@
-default:
-	python check.py
-
 install:
 	pip install -r requirements.txt
 
@@ -10,11 +7,6 @@ clean:
 build:
 	python sync.py
 
-work:
-	python work.py
-
-all:
-	pip install -r requirements.txt
+rebuild:
 	python reset.py
 	python sync.py
-	python check.py

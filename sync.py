@@ -6,8 +6,8 @@ import json
 from config import nodes, make_url
 
 sync_doc = """{
-   "source": "test",
-   "target": "%s/test",
+   "source": "%s/test",
+   "target": "test",
    "continuous": true
 }"""
 
@@ -31,7 +31,9 @@ def sync():
       r = requests.post('/'.join([make_url(node), '_replicator']),
                         data=doc,
                         headers=headers)
-      print r.json()
+      if 'error' in r.json():
+        raise Exception(r.json())
+  print "Synced." 
 
 if __name__ == '__main__':
   sync()

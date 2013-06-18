@@ -158,7 +158,9 @@ This view makes considerable use of CouchDB's secondary indexes to slice and dic
 
 The only time it makes sense, then, to update a record is when it's incorrect, or if you're migrating to a new schema. Writing application logic that embraces this will save you a thousand headaches.
 
-## Dissed her and dismissed her: Breaking the Cluster
+## Dissed [them] and dismissed [them]*: Breaking the Cluster
+
+\* fixed for gender neutrality, because Run-DMC does not discriminate who they diss or dismiss by how a person identifies.
 
 Back to testing: let's blow up a node. Run `python test.py simple direct` again, but kill  the n1 node as writing begins. (CTRL-C should do the trick) You should get results like this:
 

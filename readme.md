@@ -10,9 +10,36 @@ Inspired by Kyle Kingsbury's [Jepsen][jepsen] series, this is my attempt to put 
 
 ## Sing along
 
-To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, I just installed five copies of CouchDB and configured them to use different ports. Here's how to do that:
+To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, I just installed five copies of CouchDB and configured them to use different ports. To do that, we'll compile CouchDB from source, so we'll need to install CouchDB's dependencies. 
 
-    TODO
+If you're on Unix, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Unix). If you're on Windows (ew), read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Windows). Once you've got all the necessary dependencies:
+
+    git clone git@github.com:apache/couchdb.git
+    cd couchdb
+    ./bootstrap
+
+Then, for each of your five copies, do this:
+
+    ./configure --prefix=/absolute/path/to/copy/directory/n1
+    make && make install
+
+...Where for each copy, n1 becomes n2, n3, n4, etc. Then, for each copy, go to wherever you installed it, and edit `etc/couchdb/default.ini`. Find the section that looks like...
+
+    [httpd]
+    port = 5984
+    bind_address = 127.0.0.1
+    
+...and make it look like...
+
+    [httpd]
+    port = 5985
+    bind_address = 127.0.0.1
+
+...where for n1 it's 5, for n2 it's 6, etc., so that each copy uses a different port. In the end, you should be using ports 5985 - 5989.
+
+To start each copy, run `bin/couchdb`, such as by going to the root of the copy (the place specified earlier in the `prefix` argument) and executing:
+
+    ./bin/couchdb
 
 Once you've got your cluster:
 

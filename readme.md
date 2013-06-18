@@ -10,9 +10,9 @@ Inspired by Kyle Kingsbury's [Jepsen][jepsen] series, this is my attempt to put 
 
 ## Sing along
 
-To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, I just installed five copies of CouchDB and configured them to use different ports. To do that, we'll compile CouchDB from source, so we'll need to install CouchDB's dependencies. 
+To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, we'll compile CouchDB from source, and use it to install five copies that use different ports to communicate. 
 
-If you're on Unix, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Unix). If you're on Windows, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Windows). Once you've got all the necessary dependencies:
+So, first up, we'll need to install CouchDB's dependencies. If you're on Unix, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Unix). If you're on Windows, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Windows). Once you've got all the necessary dependencies:
 
     git clone git@github.com:apache/couchdb.git
     cd couchdb

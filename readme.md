@@ -59,7 +59,7 @@ Continuous replication in CouchDB sets up a listener on the source database's ch
 
 Each node in our cluster replicates with every other node, so the network map looks like this:
 
-![Pentalicious][pentagram]
+![Da Vinci builds a Cluster][da_vinci]
 
 That way, if a node ever loses connection, then replications will bring it up-to-date once it comes back -- assuming it's offline for less time than it takes for the replication to stop retrying the connection, which by default is a few days.
 
@@ -280,7 +280,7 @@ Thanks again to Kyle for the Jepsen series. You inspired me to learn more by bre
 [jepsen]: http://aphyr.com/posts/281-call-me-maybe-carly-rae-jepsen-and-the-perils-of-network-partitions
 [tricky]: http://www.youtube.com/watch?v=l-O5IHVhWj0
 [tricky_cover]: http://www.bitcandy.com/img/plogs/1334080668.jpg
-[pentagram]: http://farm3.staticflickr.com/2854/9067722628_09560c77ae_o.jpg
+[da_vinci]: http://farm4.staticflickr.com/3751/9079962810_6a77d9c60c_o.jpg
 [quorum]: http://en.wikipedia.org/wiki/Quorum_(distributed_computing)
 [sbisbee]: http://www.sbisbee.com/
 [final]: http://aphyr.com/posts/286-call-me-maybe-final-thoughts

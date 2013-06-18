@@ -2,17 +2,17 @@
 
 [![It's Tricky.][tricky_cover]][tricky]
 
-## Networks are tricky
+**Networks are tricky**
 
 Run-DMC knows how it is. Fools think, hey, I give the database my data; it should be there when I want it, right? Not so fast. As Rev. Run says, "It's very complicated."
 
 Inspired by Kyle Kingsbury's [Jepsen][jepsen] series, this is my attempt to put CouchDB through the same rigorous testing to uncover just how tricky distributed systems are.
 
-## Sing along
+**Sing along**
 
 To run these tests yourself, you'll need a cluster of CouchDB machines. To do that, I just installed five copies of CouchDB and configured them to use different ports. To do that, we'll compile CouchDB from source, so we'll need to install CouchDB's dependencies. 
 
-If you're on Unix, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Unix). If you're on Windows (ew), read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Windows). Once you've got all the necessary dependencies:
+If you're on Unix, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Unix). If you're on Windows, read [this](https://raw.github.com/apache/couchdb/master/INSTALL.Windows). Once you've got all the necessary dependencies:
 
     git clone git@github.com:apache/couchdb.git
     cd couchdb
@@ -51,7 +51,7 @@ Once you've got your cluster:
 
 Now you should be good to go.
 
-## Clusters in CouchDB
+**Clusters in CouchDB**
 
 CouchDB isn't built to operate in clusters by default, so for this experiment, our five nodes just replicate between each other, aspiring to be identical.
 
@@ -63,7 +63,7 @@ Each node in our cluster replicates with every other node, so the network map lo
 
 That way, if a node ever loses connection, then replications will bring it up-to-date once it comes back -- assuming it's offline for less time than it takes for the replication to stop retrying the connection, which by default is a few days.
 
-## Rock a Rhyme: Simple Writes
+**Rock a Rhyme: Simple Writes**
 
 First, let's see what happens if we just write a bunch of numbers to our cluster. Do...
 
@@ -107,7 +107,7 @@ But if we check back in five seconds, with `python test.py sleep sequential`, yo
 
 Everything's consistent. All it took was time. But that means anywhere in those five seconds, queries to the cluster would return inconsistent results: one node saying a doc doesn't exist when another says it does, etc. How can we fix this?
 
-## My name is Run, I'm \#1: Master Writes
+**My name is Run, I'm \#1: Master Writes**
 
 Many databases have a master-slave setup, where writes go to the master, which replicates to numerous slaves, which handle reads. We can do this with our current setup by running `python test.py simple direct`, which yields:
 
@@ -129,7 +129,7 @@ Many databases have a master-slave setup, where writes go to the master, which r
 
 (Why does this happen? I don't know D:) Hey, it worked! Nice as this is, you can run into scaling issues as clients become geographically distributed. If you want multiple, geographically distributed masters so that your users in China and Zimbabwe don't experience prohibitive lag with your Chicago master, you slowly but surely approach the same consistency problems we hit in the first place. That's no good.
 
-## We don't quit: Quorum
+**We don't quit: Quorum**
 
 Since we wrote our doc to a node in the cluster, then we know at least one node has the document. [Quorum][quorum] is a technique for handling this circumstance, which queries multiple nodes and uses their responses as "votes". When a particular result has enough votes, it's returned to the client. If the cluster can't reach quorum, such as by nodes disagreeing, the client gets an error saying so.
 
@@ -146,7 +146,7 @@ We can aggregate the results of our randomly-distributed writes to get everythin
 
 That `Got [id] by quorum!` line refers to a function in the check that has multiple nodes vote on their version of a doc. If no version has a majority, the function reports that getting the document failed. That's quorum.
 
-## Right on time: Application Design
+**Right on time: Application Design**
 
 Quorum reduces the probability our system is inconsistent during a transaction, but it doesn't solve the problem. Even if a majority of nodes agree, it might be that the up-to-date nodes are just in the minority. CouchDB is an AP system, so as long as the CAP theorem holds, our data is only eventually consistent.
 
@@ -158,7 +158,7 @@ This view makes considerable use of CouchDB's secondary indexes to slice and dic
 
 The only time it makes sense, then, to update a record is when it's incorrect, or if you're migrating to a new schema. Writing application logic that embraces this will save you a thousand headaches.
 
-## Dissed her and dismissed her: Breaking the Cluster
+**Dissed her and dismissed her: Breaking the Cluster**
 
 Back to testing: let's blow up a node. Run `python test.py simple direct` again, but kill  the n1 node as writing begins. (CTRL-C should do the trick) You should get results like this:
 
@@ -188,7 +188,7 @@ In the meantime, the best we can do is rely on master-master replication to prov
 
 `sequential` evenly distributes our workload over the cluster, diminishing the number of writes on each node at any given time, and thus reducing the number likely to be lost if a node dies. But, this only reduces the chance - it doesn't eliminate it.
 
-## Always tearin' what I'm wearin': Partitioning the Network
+**Always tearin' what I'm wearin': Partitioning the Network**
 
 Now the fun. We'll split our 5-node cluster into two parts: n1-n2, and n3-n5. We do this by restricting who replicates with who.
 
@@ -220,7 +220,7 @@ That makes sense. `sequential` made sure each node got 20% of the total workload
 
 This is only possible because we're not performing updates, only new writes. If we were, nodes would conflict and somebody would lose data. So, protip: prefer writes over updates wherever possible.
 
-## Raising Hell: Updates
+**Raising Hell: Updates**
 
 This was my first ops-style project, and coming from a dev background, I found it illuminating. Vanilla CouchDB performed better than I'd expected, but so much of that depended on design patterns. If I'd thrown updates into the mix, this would have been a shitshow.
 
@@ -267,7 +267,7 @@ What happens when we allow the partition to recover? Try `python test.py heal sh
 
 Not bad. When we allow the network to recover, the nodes come together again. No duplicates. Checksums pass. And we get our doc by quorum! Whoo!
 
-## Final Thoughts
+**Final Thoughts**
 
 Per the question on Jepsen's [Final Thoughts][final] post, "How do computers even work?" I still sit firmly in the camp of those who have no idea. But by asking questions, testing assumptions, and listening to lots of [Run-DMC remixes](http://www.youtube.com/watch?v=mGEJMmzKviY), I feel like I've come closer to understanding.
 

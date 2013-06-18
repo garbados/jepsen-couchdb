@@ -38,7 +38,7 @@ That way, if a node ever loses connection, then replications will bring it up-to
 
 ## Rock a Rhyme: Simple Writes
 
-First, let's see what happens if we just write a bunch of numbers to random nodes. Do...
+First, let's see what happens if we just write a bunch of numbers to our cluster. Do...
 
     python test.py simple sequential
 
@@ -117,7 +117,7 @@ We can aggregate the results of our randomly-distributed writes to get everythin
     ...and checksum passed!
     Reset.
 
-That `Got [id] by quorun!` line refers to a function in the check that has multiple nodes vote on their version of a doc. If no version has a majority, the function reports that getting the document failed. That's quorum.
+That `Got [id] by quorum!` line refers to a function in the check that has multiple nodes vote on their version of a doc. If no version has a majority, the function reports that getting the document failed. That's quorum.
 
 ## Right on time: Application Design
 
@@ -125,7 +125,7 @@ Quorum reduces the probability our system is inconsistent during a transaction, 
 
 Inconsistency is most problematic when updating documents: you write a doc, succeed, go to update it, and find the cluster telling you it doesn't exist. A simple solution is, well, don't update your docs. Write new ones instead.
 
-[Sam Bisbee][sbisbee] related this design philosophy to me through the lense of the accountant's ledger: when new financial transactions occur, you don't go back and change old lines, you just write new ones. Totals are then calculated dynamically, by summing rows.
+[Sam Bisbee][sbisbee] related this design philosophy to me through the lens of the accountant's ledger: when new financial transactions occur, you don't go back and change old lines, you just write new ones. Totals are then calculated dynamically, by summing rows.
 
 This view makes considerable use of CouchDB's secondary indexes to slice and dice data into what you need. In essence, keep your docs merely as data. Use MapReduce to derive meaning from them.
 

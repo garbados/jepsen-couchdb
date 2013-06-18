@@ -269,7 +269,7 @@ Not bad. When we allow the network to recover, the nodes come together again. No
 
 ## Final Thoughts
 
-Per the question on Jepsen's [Final Thoughts][final] post, "How do computers even work?" I still sit firmly in the camp of those who have no idea. But by asking questions, testing assumptions, and listening to lots of Run-DMC remixes, I feel like I've come closer to understanding.
+Per the question on Jepsen's [Final Thoughts][final] post, "How do computers even work?" I still sit firmly in the camp of those who have no idea. But by asking questions, testing assumptions, and listening to lots of [Run-DMC remixes](http://www.youtube.com/watch?v=mGEJMmzKviY), I feel like I've come closer to understanding.
 
 CouchDB isn't built to handle clusters, so much of how this cluster chose to do so was by my own design, but given dangerously little effort, it performed admirably.
 

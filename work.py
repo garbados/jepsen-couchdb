@@ -98,7 +98,7 @@ def sequential(n=100):
         break
   return results
 
-def shitshow(n=100):
+def trainwreck(n=100):
   """
   Like sequential, but with updates, because you're a glutton for pain.
   """

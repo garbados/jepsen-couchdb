@@ -75,7 +75,7 @@ def get_one_by_quorum(nodes, id):
     return None
   return docs[votes.most_common(1)[0][0]]
 
-def shitshow_get(nodes):
+def trainwreck_get(nodes):
   results = []
   for node in nodes:
     try:
@@ -128,10 +128,10 @@ def quorum(work, n=100):
   if sum(results.values()) == sum(range(n)):
     print "...and checksum passed!"
 
-def shitshow(work, n=100):
+def trainwreck(work, n=100):
   results = work(n)
   format_acks(results, n)
-  results = shitshow_get(nodes)
+  results = trainwreck_get(nodes)
   print len(results.keys()), "docs in result set."
   values = [row['value'] for row in results.values()]
   # print values
@@ -140,7 +140,7 @@ def shitshow(work, n=100):
   return results
 
 def heal(work, n=100):
-  shitshow(work, n)
+  trainwreck(work, n)
   sync.sync()
   time.sleep(5)
   results = get_all(nodes)

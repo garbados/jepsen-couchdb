@@ -224,9 +224,9 @@ This is only possible because we're not performing updates, only new writes. If 
 
 ## Raising Hell: Updates
 
-This was my first ops-style project, and coming from a dev background, I found it illuminating. Vanilla CouchDB performed better than I'd expected, but so much of that depended on design patterns. If I'd thrown updates into the mix, this would have been a shitshow.
+This was my first ops-style project, and coming from a dev background, I found it illuminating. Vanilla CouchDB performed better than I'd expected, but so much of that depended on design patterns. If I'd thrown updates into the mix, this would have been a trainwreck.
 
-But... that's what you came to see, isn't it? Run `python test.py shitshow shitshow part_network`:
+But... that's what you came to see, isn't it? Run `python test.py trainwreck trainwreck part_network`:
 
     Reset.
     Synced.
@@ -242,7 +242,7 @@ So, our client thinks every write succeeded. And the cluster does only have 100 
 
 Gross.
 
-What happens when we allow the partition to recover? Try `python test.py heal shitshow part_network`:
+What happens when we allow the partition to recover? Try `python test.py heal trainwreck part_network`:
 
     Reset.
     Synced.
